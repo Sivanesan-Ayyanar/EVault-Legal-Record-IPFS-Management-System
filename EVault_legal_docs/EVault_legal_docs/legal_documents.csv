@@ -1,0 +1,26 @@
+document_id,document_name,document_type,created_date,modified_date,author,keywords,description,location,file_path
+1,Contract Agreement,Agreement,2024-07-15,2024-07-16,John Doe,contract,Legal agreement between parties,/documents/contract_agreement.pdf
+2,Property Deed,Deed,2024-07-14,2024-07-15,Jane Smith,property,Deed for property ownership,/documents/property_deed.pdf
+3,Court Order,Order,2024-07-13,2024-07-14,Legal Department,court,Official court order,/documents/court_order.pdf
+4,Will and Testament,Will,2024-07-12,2024-07-13,Emily Johnson,will,Estate distribution details,/documents/will_testament.pdf
+5,Patent Application,Application,2024-07-11,2024-07-12,Legal Team,patent,Application for patent registration,/documents/patent_application.pdf
+6,Trademark Registration,Registration,2024-07-10,2024-07-11,Trademark Office,trademark,Registration of trademark,/documents/trademark_registration.pdf
+7,Employment Contract,Contract,2024-07-09,2024-07-10,HR Department,employment,Contract for employee hiring,/documents/employment_contract.pdf
+8,Criminal Complaint,Complaint,2024-07-08,2024-07-09,Public Prosecutor,criminal,Formal criminal complaint,/documents/criminal_complaint.pdf
+9,Divorce Decree,Decree,2024-07-07,2024-07-08,Court Clerk,divorce,Legal decree for divorce settlement,/documents/divorce_decree.pdf
+10,Insurance Policy,Policy,2024-07-06,2024-07-07,Insurance Agent,insurance,Policy for insurance coverage,/documents/insurance_policy.pdf
+11,Real Estate Lease Agreement,Lease Agreement,2024-07-05,2024-07-06,Property Manager,lease,Lease agreement for real estate rental,/documents/lease_agreement.pdf
+12,Power of Attorney,Power of Attorney,2024-07-04,2024-07-05,Attorney,attorney,Legal authority granted by one person to another,/documents/power_of_attorney.pdf
+13,Medical Consent Form,Consent Form,2024-07-03,2024-07-04,Healthcare Provider,medical,Consent form for medical procedures,/documents/medical_consent_form.pdf
+14,Financial Statement,Statement,2024-07-02,2024-07-03,Accountant,financial,Statement of financial position,/documents/financial_statement.pdf
+15,Trademark License Agreement,License Agreement,2024-07-01,2024-07-02,Trademark Owner,license,License agreement for trademark use,/documents/trademark_license.pdf
+16,Non-Disclosure Agreement,Agreement,2024-06-30,2024-07-01,Confidentiality Officer,nda,Non-disclosure agreement for confidential information,/documents/nda_agreement.pdf
+17,Incorporation Certificate,Certificate,2024-06-29,2024-06-30,Legal Advisor,incorporation,Certificate of incorporation,/documents/incorporation_certificate.pdf
+18,Loan Agreement,Agreement,2024-06-28,2024-06-29,Financial Institution,loan,Loan agreement for financial lending,/documents/loan_agreement.pdf
+19,Property Survey Report,Survey Report,2024-06-27,2024-06-28,Surveyor,survey,Report of property survey findings,/documents/property_survey_report.pdf
+20,Tax Return,Return,2024-06-26,2024-06-27,Tax Consultant,tax,Annual tax return document,/documents/tax_return.pdf
+21,Arbitration Agreement,Agreement,2024-06-25,2024-06-26,Arbitrator,arbitration,Agreement for arbitration proceedings,/documents/arbitration_agreement.pdf
+22,Intellectual Property Assignment,Assignment,2024-06-24,2024-06-25,IP Lawyer,ip,intellectual property assignment,/documents/ip_assignment.pdf
+23,Environmental Impact Assessment,Assessment,2024-06-23,2024-06-24,Environmental Consultant,environment,Assessment of environmental impact,/documents/environmental_assessment.pdf
+24,Confidential Settlement Agreement,Settlement Agreement,2024-06-22,2024-06-23,Legal Counsel,settlement,Confidential agreement for legal settlement,/documents/settlement_agreement.pdf
+25,Regulatory Compliance Report,Compliance Report,2024-06-21,2024-06-22,Compliance Officer,regulatory,Report on regulatory compliance,/documents/compliance_report.pdf

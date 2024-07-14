@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>E Vault | Legal Records</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body class="h-full">
+  <div>
+    <!-- Mobile Menu -->
+    <div class="relative z-50 lg:hidden mmenu" role="dialog" style="display: none;" aria-modal="true">
+      <div class="fixed inset-0 bg-gray-900/80"></div>
+      <div class="fixed inset-0 flex">
+        <div class="relative mr-16 flex w-full max-w-xs flex-1 min-h-screen">
+          <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+            <button type="button" class="-m-2.5 p-2.5" id="CloseButton">
+              <span class="sr-only">Close sidebar</span>
+              <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Sidebar component, swap this element with another sidebar if you like -->
+          <div class="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 bg-indigo-600 ring-1 ring-white/10">
+            <div class="flex h-16 shrink-0 items-center">
+              <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white" alt="Your Company">
+            </div>
+            <nav class="flex flex-1 flex-col">
+              <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                <li>
+                  <ul role="list" class="-mx-2 space-y-1">
+                    <li>
+                      <a href="/"
+                        class="bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                        Dashboard
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/files" class="bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center hover:bg-indigo-600">
+                        Manage Files & Versions
+                      </a>
+                      
+                    </li>
+                    <li>
+                      <a href="/shared_with_me"
+                        class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                        File Inbox
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/user_manual"
+                        class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                        User Manual
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/existing_records"
+                        class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                        Existing Records
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#"
+                        class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                        Verification
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="mt-auto">
+                  <a href="#"
+                    class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-indigo-700 hover:text-white items-center">
+                    Settings
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Static Sidebar for Desktop -->
+    <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col min-h-screen">
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600 px-6 pb-4 ring-1 ring-white/10">
+        <div class="flex h-16 shrink-0 items-center">
+          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white" alt="Your Company">
+        </div>
+        <nav class="flex flex-1 flex-col">
+          <ul role="list" class="flex flex-1 flex-col gap-y-7">
+            <li>
+              <ul role="list" class="-mx-2 space-y-1">
+                <li>
+                  <a href="#"
+                    class="bg-indigo-700 text-white group flex gap-x-3 items-center rounded-md p-2 text-sm leading-6 font-semibold">
+                    Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a href="/files"
+                    class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                    Files
+                  </a>
+                </li>
+                <li>
+                  <a href="/shared_with_me"
+                    class="text-white hover:bg-indigo-700 items-center group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                    File Inbox
+                  </a>
+                </li>
+                <li>
+                  <a href="/user_manual"
+                    class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                    User Manual
+                  </a>
+                </li>
+                <li>
+                  <a href="/existing_records"
+                    class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                    Existing Records
+                  </a>
+                </li>
+                <li>
+                  <a href="#"
+                    class="text-white hover:bg-indigo-700 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                    Verification
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="mt-auto">
+              <a href="/logout"
+                class="group -mx-2 flex gap-x-3 items-center rounded-md p-2 text-sm font-semibold leading-6 hover:bg-indigo-700 text-white">
+                Sign Out
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="lg:pl-72">
+      <div
+        class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 w-full">
+        <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" id="OpenButton">
+          <span class="sr-only">Open sidebar</span>
+          <i class="fa-regular fa-bars fa-lg"></i>
+        </button>
+
+        <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+          <div class="relative flex flex-1"></div>
+          <div class="flex items-center gap-x-4 lg:gap-x-6">
+            <!-- Separator -->
+            <div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true"></div>
+            <!-- Profile dropdown -->
+            <div class="relative">
+              <button type="button" class="-m-1.5 flex items-center p-1.5" id="user-menu-button" aria-expanded="false"
+                aria-haspopup="true">
+                <span class="sr-only">Open user menu</span>
+                <span class="lg:flex lg:items-center">
+                  <i class="fas fa-user-circle text-gray-400 text-2xl mr-2"></i> <!-- Added user icon -->
+                  <span class="ml-2 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">Hi! {{ userName
+                    }}</span>
+                  <i class="fa-solid fa-angle-down ml-2 h-5 w-5 text-gray-400"></i> <!-- Changed to solid icon -->
+                </span>
+              </button>
+              <div
+                class="hidden absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="user-menu">
+                <a href="/logout" class="block px-3 py-1 text-sm leading-6 text-gray-900" role="menuitem" tabindex="-1"
+                  id="user-menu-item-1">Sign out</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <main class="py-10 w-full bg-gradient-to-br from-indigo-100 to-purple-200 min-h-screen">
+        <div class="px-4 sm:px-6 lg:px-8 w-full">
+          <div class="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-2xl overflow-hidden">
+            <div class="p-8">
+              <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                  ETH-IPFS File Upload
+                </span>
+              </h1>
+              
+              <button id="connectMetamask" class="w-full mb-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 shadow-lg">
+                Connect MetaMask
+              </button>
+              
+              <form id="uploadForm" class="mt-6" style="display:none;">
+                <div class="mb-4">
+                  <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose file</label>
+                  <div class="relative">
+                    <input type="file" id="fileInput" required class="hidden" onchange="updateFileName(this)">
+                    <label for="fileInput" class="cursor-pointer bg-gray-100 text-gray-700 py-2 px-4 w-full inline-flex items-center justify-between rounded-lg border border-gray-300 shadow-sm hover:bg-gray-200 transition duration-300 ease-in-out">
+                      <span id="fileName">No file chosen</span>
+                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" id="uploadButton" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 shadow-lg">
+                  Upload
+                </button>
+              </form>
+              
+              <div id="result" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200 hidden">
+                <!-- Result content will be inserted here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <script>
+        function updateFileName(input) {
+          const fileName = input.files[0]?.name || 'No file chosen';
+          document.getElementById('fileName').textContent = fileName;
+        }
+      
+        function shortenHash(hash) {
+          return hash.substring(0, 6) + '...' + hash.substring(hash.length - 4);
+        }
+    
+        function copyToClipboard(text) {
+          navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+          }).catch(err => {
+            console.error('Error in copying text: ', err);
+          });
+        }
+      
+        const connectButton = document.getElementById('connectMetamask');
+        const uploadForm = document.getElementById('uploadForm');
+        const resultDiv = document.getElementById('result');
+        const uploadButton = document.getElementById('uploadButton');
+      
+        connectButton.addEventListener('click', async () => {
+          if (typeof window.ethereum !== 'undefined') {
+            try {
+              await window.ethereum.request({ method: 'eth_requestAccounts' });
+              connectButton.textContent = 'Connected';
+              connectButton.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+              connectButton.classList.add('bg-green-600', 'hover:bg-green-700');
+              uploadForm.style.display = 'block';
+            } catch (error) {
+              console.error('User denied account access');
+            }
+          } else {
+            console.log('MetaMask not detected');
+            alert('Please install MetaMask to use this application.');
+          }
+        });
+      
+        uploadForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', document.getElementById('fileInput').files[0]);
+    
+    uploadButton.textContent = 'Uploading...';
+    uploadButton.disabled = true;
+    
+    try {
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      console.log('Server response:', data);
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      resultDiv.innerHTML = `
+        <h3 class="text-lg font-semibold text-green-600 mb-4">Upload Successful!</h3>
+        <div class="flex flex-col md:flex-row gap-6">
+          <div class="bg-white p-4 rounded-lg shadow flex-1">
+            <div class="mb-3">
+              <p class="text-sm font-medium text-gray-500">IPFS Hash</p>
+              <div class="flex items-center mt-1">
+                <span class="text-lg font-mono">${shortenHash(data.ipfs_hash)}</span>
+                <button onclick="copyToClipboard('${data.ipfs_hash}')" class="ml-2 text-gray-500 hover:text-gray-700">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div class="mb-3">
+              <p class="text-sm font-medium text-gray-500">Transaction Hash</p>
+              <div class="flex items-center mt-1">
+                <span class="text-lg font-mono">${shortenHash(data.tx_hash)}</span>
+                <button onclick="copyToClipboard('${data.tx_hash}')" class="ml-2 text-gray-500 hover:text-gray-700">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow flex-1">
+            <h4 class="text-lg font-semibold text-gray-800 mb-3">File Management</h4>
+            <p class="text-sm text-gray-600 mb-4">Manage your files and access version control features.</p>
+          <a href="/files" class="bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center hover:bg-indigo-600">
+  Manage Files & Versions
+</a>
+
+
+          </div>
+        </div>
+      `;
+      resultDiv.classList.remove('hidden');
+    } catch (error) {
+      console.error('Error:', error);
+      resultDiv.innerHTML = `
+        <p class="text-red-600">An error occurred during upload: ${error.message}</p>
+      `;
+      resultDiv.classList.remove('hidden');
+    } finally {
+      uploadButton.textContent = 'Upload';
+      uploadButton.disabled = false;
+    }
+  });
+</script>
+    </body>
+    </html>

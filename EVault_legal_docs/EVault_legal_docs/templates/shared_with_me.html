@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Files Inbox</title>
+</head>
+
+<body>
+
+    <body class="h-full">
+        <div>
+            <!-- Mobile Menu -->
+            <div class="relative z-50 lg:hidden mmenu" role="dialog" style="display: none;" aria-modal="true">
+                <div class="fixed inset-0 bg-gray-900/80"></div>
+                <div class="fixed inset-0 flex">
+                    <div class="relative mr-16 flex w-full max-w-xs flex-1 min-h-screen">
+                        <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+                            <button type="button" class="-m-2.5 p-2.5" id="CloseButton">
+                                <span class="sr-only">Close sidebar</span>
+                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Sidebar component, swap this element with another sidebar if you like -->
+                        <div
+                            class="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 bg-indigo-600 ring-1 ring-white/10">
+                            <div class="flex h-16 shrink-0 items-center">
+                                <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white"
+                                    alt="Your Company">
+                            </div>
+                            <nav class="flex flex-1 flex-col">
+                                <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                                    <li>
+                                        <ul role="list" class="-mx-2 space-y-1">
+                                            <li>
+                                                <a href="/"
+                                                    class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                    <i class="fa-regular fa-house fa-lg"></i> Dashboard
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/files"
+                                                    class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                    <i class="fa-regular fa-sitemap fa-lg"></i> Files
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/shared_with_me"
+                                                    class="bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                    <i class="fa-regular fa-display fa-lg"></i> File Inbox
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/user_manual"
+                                                    class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                    <i class="fa-regular fa-address-card fa-lg"></i> User Manual
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/existing_records"
+                                                    class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                    <i class="fa-regular fa-folder fa-lg"></i> Existing Records
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#"
+                                                    class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                    <i class="fa-regular fa-badge-check fa-lg"></i> Verification
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="mt-auto">
+                                        <a href="#"
+                                            class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-indigo-700 hover:text-white items-center">
+                                            <i class="fa-regular fa-gear fa-lg text-white"></i> Settings
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Static Sidebar for Desktop -->
+            <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col min-h-screen">
+                <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600 px-6 pb-4 ring-1 ring-white/10">
+                    <div class="flex h-16 shrink-0 items-center">
+                        <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white"
+                            alt="Your Company">
+                    </div>
+                    <nav class="flex flex-1 flex-col">
+                        <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                            <li>
+                                <ul role="list" class="-mx-2 space-y-1">
+                                    <li>
+                                        <a href="/"
+                                            class="text-white hover:bg-indigo-700 items-center group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                            <i class="fa-regular fa-house fa-lg"></i> Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/files"
+                                            class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                            <i class="fa-regular fa-sitemap fa-lg"></i> Files
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/shared_with_me"
+                                            class="bg-indigo-700 text-white group flex gap-x-3 items-center rounded-md p-2 text-sm leading-6 font-semibold">
+                                            <i class="fa-regular fa-display fa-lg"></i> File Inbox
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/user_manual"
+                                            class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                            <i class="fa-regular fa-address-card fa-lg"></i> User Manual
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/existing_records"
+                                            class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                            <i class="fa-regular fa-folder fa-lg"></i> Existing Records
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"
+                                            class="text-white hover:bg-indigo-700 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                            <i class="fa-regular fa-badge-check fa-lg"></i> Verification
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="mt-auto">
+                                <a href="/logout"
+                                    class="group -mx-2 flex gap-x-3 items-center rounded-md p-2 text-sm font-semibold leading-6 hover:bg-indigo-700 text-white">
+                                    <i class="fa-regular fa-gear fa-lg text-white"></i> Sign Out
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="lg:pl-72">
+                <div
+                    class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 w-full">
+                    <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" id="OpenButton">
+                        <span class="sr-only">Open sidebar</span>
+                        <i class="fa-regular fa-bars fa-lg"></i>
+                    </button>
+
+                    <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+                        <div class="relative flex flex-1"></div>
+                        <div class="flex items-center gap-x-4 lg:gap-x-6">
+
+                            <!-- Separator -->
+                            <div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true"></div>
+
+                            <!-- User Manual dropdown -->
+                            <div class="relative">
+                                <button type="button" class="-m-1.5 flex items-center p-1.5" id="user-menu-button" aria-expanded="false"
+                                  aria-haspopup="true">
+                                  <span class="sr-only">Open user menu</span>
+                                  <span class="lg:flex lg:items-center">
+                                    <i class="fas fa-user-circle text-gray-400 text-2xl mr-2"></i> <!-- Added user icon -->
+                                    <span class="ml-2 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">Hi! {{ userName
+                                      }}</span>
+                                    <i class="fa-solid fa-angle-down ml-2 h-5 w-5 text-gray-400"></i> <!-- Changed to solid icon -->
+                                  </span>
+                                </button>
+                                <div
+                                  class="hidden absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                                  role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="user-menu">
+                                  <a href="/logout" class="block px-3 py-1 text-sm leading-6 text-gray-900" role="menuitem" tabindex="-1"
+                                    id="user-menu-item-1">Sign out</a>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+
+                <main class="py-10 w-full">
+                    <div class="px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto">
+                        <h1 class="text-2xl font-semibold text-gray-900 mb-6">Files Shared With Me</h1>
+
+                        <!-- New header for PDF information -->
+                        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+                            <p class="font-bold">Important Note:</p>
+                            <p>PDF files cannot be viewed directly. Please use the download button to access PDF
+                                documents.</p>
+                        </div>
+
+                        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Filename</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Shared By</th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for file in files %}
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
+                                            file.filename }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ file.user }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button onclick="viewFile('{{ file._id }}')"
+                                                class="text-indigo-600 hover:text-indigo-900 mr-2">View</button>
+                                            <button onclick="downloadFile('{{ file._id }}')"
+                                                class="text-green-600 hover:text-green-900">Download</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        async function viewFile(fileId, version = null) {
+            try {
+                let url = `/view/${fileId}`;
+                if (version !== null) {
+                    url += `?version=${version}`;
+                }
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while trying to view the file.');
+            }
+        }
+
+        async function downloadFile(fileId, version = null) {
+            try {
+                let url = `/download/${fileId}`;
+                if (version !== null) {
+                    url += `?version=${version}`;
+                }
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${errorText}`);
+                }
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const filenameMatch = contentDisposition && contentDisposition.match(/filename="?(.+)"?/i);
+                const filename = filenameMatch ? filenameMatch[1] : 'download';
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while downloading the file.');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="https://fa6p.pages.dev/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <title>Files | Version Control</title>
+    <style>
+        @layer utilities {
+  .action-button {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md p-1 transition-colors duration-200;
+  }
+}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: semibold;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        .upload-form {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+        }
+
+        .file-input {
+            margin-bottom: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #9ca3af;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #6b7280;
+        }
+
+        .shortened-hash {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .copy-btn {
+            cursor: pointer;
+            margin-left: 5px;
+            color: #4f46e5;
+            display: flex;
+            align-items: center;
+        }
+
+        .copy-btn i {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body class="h-full">
+    <div>
+        <!-- Mobile Menu -->
+        <div class="relative z-50 lg:hidden mmenu" role="dialog" style="display: none;" aria-modal="true">
+            <div class="fixed inset-0 bg-gray-900/80"></div>
+            <div class="fixed inset-0 flex">
+                <div class="relative mr-16 flex w-full max-w-xs flex-1 min-h-screen">
+                    <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+                        <button type="button" class="-m-2.5 p-2.5" id="CloseButton">
+                            <span class="sr-only">Close sidebar</span>
+                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Sidebar component, swap this element with another sidebar if you like -->
+                    <div
+                        class="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 bg-indigo-600 ring-1 ring-white/10">
+                        <div class="flex h-16 shrink-0 items-center">
+                            <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white"
+                                alt="Your Company">
+                        </div>
+                        <nav class="flex flex-1 flex-col">
+                            <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                                <li>
+                                    <ul role="list" class="-mx-2 space-y-1">
+                                        <li>
+                                            <a href="/"
+                                                class="bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                <i class="fa-regular fa-house fa-lg"></i> Dashboard
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/files"
+                                                class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                <i class="fa-regular fa-sitemap fa-lg"></i> Files
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/shared_with_me"
+                                                class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                <i class="fa-regular fa-display fa-lg"></i> File Inbox
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/user_manual"
+                                                class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                <i class="fa-regular fa-address-card fa-lg"></i> User Manual
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/existing_records"
+                                                class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                <i class="fa-regular fa-folder fa-lg"></i> Existing Records
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#"
+                                                class="text-white hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold items-center">
+                                                <i class="fa-regular fa-badge-check fa-lg"></i> Verification
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="mt-auto">
+                                    <a href="#"
+                                        class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-indigo-700 hover:text-white items-center">
+                                        <i class="fa-regular fa-gear fa-lg text-white"></i> Settings
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Static Sidebar for Desktop -->
+        <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col min-h-screen">
+            <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-indigo-600 px-6 pb-4 ring-1 ring-white/10">
+                <div class="flex h-16 shrink-0 items-center">
+                    <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white"
+                        alt="Your Company">
+                </div>
+                <nav class="flex flex-1 flex-col">
+                    <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                        <li>
+                            <ul role="list" class="-mx-2 space-y-1">
+                                <li>
+                                    <a href="/"
+                                        class="text-white hover:bg-indigo-700 items-center group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                        <i class="fa-regular fa-house fa-lg"></i> Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/files"
+                                        class="bg-indigo-700 text-white group flex gap-x-3 items-center rounded-md p-2 text-sm leading-6 font-semibold">
+                                        <i class="fa-regular fa-sitemap fa-lg"></i> Files
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/shared_with_me"
+                                        class="text-white hover:bg-indigo-700 items-center group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                        <i class="fa-regular fa-display fa-lg"></i> File Inbox
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/user_manual"
+                                        class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                        <i class="fa-regular fa-address-card fa-lg"></i> User Manual
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/existing_records"
+                                        class="text-white hover:bg-indigo-700 group items-center flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                        <i class="fa-regular fa-folder fa-lg"></i> Existing Records
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="text-white hover:bg-indigo-700 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                                        <i class="fa-regular fa-badge-check fa-lg"></i> Verification
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="mt-auto">
+                            <a href="/logout"
+                                class="group -mx-2 flex gap-x-3 items-center rounded-md p-2 text-sm font-semibold leading-6 hover:bg-indigo-700 text-white">
+                                <i class="fa-regular fa-gear fa-lg text-white"></i> Sign Out
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="lg:pl-72">
+            <div
+                class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 w-full">
+                <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" id="OpenButton">
+                    <span class="sr-only">Open sidebar</span>
+                    <i class="fa-regular fa-bars fa-lg"></i>
+                </button>
+
+                <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+                    <div class="relative flex flex-1"></div>
+                    <div class="flex items-center gap-x-4 lg:gap-x-6">
+
+                        <!-- Separator -->
+                        <div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true"></div>
+
+                        <!-- Profile dropdown -->
+                        <div class="relative">
+                            <button type="button" class="-m-1.5 flex items-center p-1.5" id="user-menu-button"
+                                aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open user menu</span>
+                                <span class="lg:flex lg:items-center">
+                                    <i class="fas fa-user-circle text-gray-400 text-2xl mr-2"></i>
+                                    <!-- Added user icon -->
+                                    <span class="ml-2 text-sm font-semibold leading-6 text-gray-900"
+                                        aria-hidden="true">Hi! {{ userName
+                                        }}</span>
+                                    <i class="fa-solid fa-angle-down ml-2 h-5 w-5 text-gray-400"></i>
+                                    <!-- Changed to solid icon -->
+                                </span>
+                            </button>
+                            <div class="hidden absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                                role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1"
+                                id="user-menu">
+                                <a href="/logout" class="block px-3 py-1 text-sm leading-6 text-gray-900"
+                                    role="menuitem" tabindex="-1" id="user-menu-item-1">Sign out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <main class="py-10 w-full">
+                <div class="px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto">
+                    <!-- <h1 class="text-2xl font-semibold text-gray-900 mb-6">Your Files</h1> -->
+
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md mb-8">
+                        <h2 class="text-xl font-semibold mb-4">Upload New File</h2>
+                        <form id="fileUploadForm" enctype="multipart/form-data"
+                            class="flex justify-between items-center">
+                            <div class="flex items-center space-x-4">
+                                <label for="fileInput"
+                                    class="flex-shrink-0 bg-gray-50 border border-gray-300 rounded-md px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 cursor-pointer transition duration-150 ease-in-out">
+                                    Choose File
+                                    <input id="fileInput" name="file" type="file" class="sr-only" required>
+                                </label>
+                                <span id="fileChosen" class="text-sm text-gray-500">No file chosen</span>
+                            </div>
+                            <button type="submit"
+                                class="bg-indigo-600 text-white rounded-md px-4 py-1.5 text-sm font-semibold shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out">
+                                Upload File
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- New header for PDF information -->
+                    <!-- Compact PDF information alert -->
+                    <div class="bg-yellow-50 border-l-2 border-yellow-400 text-yellow-800 p-3 mb-4 text-sm"
+                        role="alert">
+                        <span class="font-medium">Note:</span> PDF files require download for viewing.
+                    </div>
+
+                    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Filename
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Latest Upload Date
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Current Version
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for file in files %}
+                                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {{ file.filename }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 upload-date"
+                                        data-utc="{{ file.latest_version.upload_date.isoformat() }}">
+                                        <!-- Date will be formatted by JavaScript -->
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ file.current_version }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadFile('{{ file._id }}')"
+                                                class="text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-1 transition-colors duration-200"
+                                                title="Download">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                                </svg>
+                                            </button>
+                                            <button onclick="showUpdateForm('{{ file._id }}')"
+                                                class="text-green-600 hover:text-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-md p-1 transition-colors duration-200"
+                                                title="Update">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                </svg>
+                                            </button>
+                                            <button onclick="showVersionHistory('{{ file._id }}')"
+                                                class="text-purple-600 hover:text-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-1 transition-colors duration-200"
+                                                title="Version History">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            </button>
+                                            <button onclick="viewFile('{{ file._id }}')"
+                                                class="text-yellow-600 hover:text-yellow-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded-md p-1 transition-colors duration-200"
+                                                title="View">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                </svg>
+                                            </button>
+                                            <button onclick="showShareModal('{{ file._id }}')"
+                                                class="text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-md p-1 transition-colors duration-200"
+                                                title="Share">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modals (unchanged) -->
+
+
+               <!-- Update File Modal -->
+<div id="updateForm" class="modal">
+    <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                    <div>
+                        <div class="mt-3 text-center sm:mt-5">
+                            <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Update File</h3>
+                            <div class="mt-4">
+                                <form id="fileUpdateForm" enctype="multipart/form-data">
+                                    <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose new file version</label>
+                                    <input type="file" name="file" id="fileInput" required class="block w-full text-sm text-gray-500
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-md file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-indigo-50 file:text-indigo-700
+                                        hover:file:bg-indigo-100
+                                        mb-4">
+                                    <input type="hidden" id="fileIdToUpdate" name="fileId">
+                                    <button type="submit" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200">
+                                        Upload New Version
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 sm:mt-6">
+                        <button type="button" onclick="closeUpdateForm()" class="inline-flex w-full justify-center rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 transition-colors duration-200">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Version History Modal -->
+<div id="versionHistoryModal" class="modal">
+    <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6">
+                    <div>
+                        <div class="mt-3 text-center sm:mt-5">
+                            <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Version History</h3>
+                            <div class="mt-4">
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-300" id="versionHistoryTable">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Version</th>
+                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Upload Date</th>
+                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Size</th>
+                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Uploaded By</th>
+                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-200">
+                                            <!-- Version history will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 sm:mt-6">
+                        <button type="button" onclick="closeVersionHistory()" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Share Modal -->
+<div id="shareModal" class="modal">
+    <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                    <div>
+                        <div class="mt-3 text-center sm:mt-5">
+                            <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Share File</h3>
+                            <div class="mt-4">
+                                <button onclick="generatePublicLink()" class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200">
+                                    Generate Public Link
+                                </button>
+                                <div id="publicLinkContainer" style="display: none;" class="mt-3">
+                                    <input type="text" id="publicLink" readonly class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <button onclick="copyPublicLink()" class="mt-2 inline-flex justify-center rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 transition-colors duration-200">
+                                        Copy Link
+                                    </button>
+                                </div>
+                                <hr class="my-4">
+                                <h4 class="text-sm font-medium text-gray-900 mb-2">Share with specific user:</h4>
+                                <input type="text" id="recipientInput" placeholder="Enter username to share with" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-2">
+                                <button onclick="shareWithUser()" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200">
+                                    Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 sm:mt-6">
+                        <button type="button" onclick="closeShareModal()" class="inline-flex w-full justify-center rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 transition-colors duration-200">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div></div>
+        </div>
+    </div>
+</body>
+
+<script>
+    let currentFileId;
+
+    async function shareWithUser() {
+        const recipient = document.getElementById('recipientInput').value.trim();
+        if (!recipient) {
+            alert('Please enter a recipient.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/share_file/${currentFileId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ recipient }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message);
+                closeShareModal();
+            } else {
+                throw new Error(data.error || 'An error occurred while sharing the file.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        }
+    }
+    function showShareModal(fileId) {
+        document.getElementById('shareModal').style.display = 'block';
+        currentFileId = fileId;
+    }
+    function closeShareModal() {
+        document.getElementById('shareModal').style.display = 'none';
+        document.getElementById('publicLinkContainer').style.display = 'none';
+        document.getElementById('recipientInput').value = '';
+    }
+
+    async function generatePublicLink() {
+        try {
+            const response = await fetch(`/generate_public_link/${currentFileId}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                const publicLinkInput = document.getElementById('publicLink');
+                publicLinkInput.value = window.location.origin + data.public_link;
+                document.getElementById('publicLinkContainer').style.display = 'block';
+
+                const viewPublicLinkButton = document.createElement('button');
+                viewPublicLinkButton.textContent = 'View Public Link';
+                viewPublicLinkButton.onclick = function () {
+                    viewPublicFile(currentFileId, data.public_link.split('=')[1]);
+                };
+                document.getElementById('publicLinkContainer').appendChild(viewPublicLinkButton);
+            } else {
+                throw new Error(data.error || 'An error occurred while generating the public link.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        }
+    }
+    function copyPublicLink() {
+        const publicLinkInput = document.getElementById('publicLink');
+        publicLinkInput.select();
+        document.execCommand('copy');
+        alert('Public link copied to clipboard!');
+    }
+
+    async function shareWithUser() {
+        const recipient = document.getElementById('recipientInput').value.trim();
+        if (!recipient) {
+            alert('Please enter a recipient.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/share_with_user/${currentFileId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ recipient }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message);
+                closeShareModal();
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while sharing the file.');
+        }
+    }
+    //
+    async function uploadFile(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message);
+                location.reload();
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while uploading the file.');
+        }
+    }
+
+    async function updateFile(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const fileId = document.getElementById('fileIdToUpdate').value;
+
+        try {
+            const response = await fetch(`/update/${fileId}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message);
+                location.reload();
+            } else {
+                throw new Error(data.error || 'An error occurred while updating the file.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        }
+    }
+    async function viewPublicFile(fileId, publicLink) {
+        try {
+            const url = `/public_view/${fileId}?public_link=${encodeURIComponent(publicLink)}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Server error: ${response.statusText}`);
+            }
+
+            const contentType = response.headers.get('Content-Type');
+            if (contentType && (contentType.startsWith('image/') || contentType.startsWith('text/'))) {
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+            } else {
+                const text = await response.text();
+                alert(text);  // This will show the message about downloading the file
+            }
+        } catch (error) {
+            console.error('Error viewing public file:', error);
+            alert(`An error occurred while viewing the public file: ${error.message}`);
+        }
+    }
+
+    async function viewFile(fileId, version = null) {
+        try {
+            let url = `/view/${fileId}`;
+            if (version !== null) {
+                url += `?version=${encodeURIComponent(version)}`;
+            }
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Server error: ${response.statusText}`);
+            }
+
+            const contentType = response.headers.get('Content-Type');
+            if (contentType && (contentType.startsWith('image/') || contentType.startsWith('text/'))) {
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+            } else {
+                const text = await response.text();
+                alert(text);  // This will show the message about downloading the file
+            }
+        } catch (error) {
+            console.error('Error viewing file:', error);
+            alert(`An error occurred while viewing the file: ${error.message}`);
+        }
+    }
+
+
+    async function showVersionHistory(fileId) {
+        try {
+            const response = await fetch(`/file_history/${fileId}`);
+            const data = await response.json();
+
+            const historyTable = document.getElementById('versionHistoryTable');
+            historyTable.innerHTML = `
+            <thead>
+                <tr>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Version</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Upload Date</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">IPFS Hash</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Transaction Hash</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+            </tbody>
+        `;
+
+            const versions = Array.isArray(data.versions) ? data.versions : [];
+            versions.sort((a, b) => b.version - a.version);
+
+            const tbody = historyTable.querySelector('tbody');
+            versions.forEach(version => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">${version.version}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${new Date(version.upload_date).toLocaleString()}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <span class="shortened-hash">${version.ipfs_hash.slice(0, 4)}...${version.ipfs_hash.slice(-4)}</span>
+                    <button onclick="copyToClipboard('${version.ipfs_hash}', this)" class="ml-2 text-indigo-600 hover:text-indigo-900">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <span class="shortened-hash">${version.tx_hash.slice(0, 4)}...${version.tx_hash.slice(-4)}</span>
+                    <button onclick="copyToClipboard('${version.tx_hash}', this)" class="ml-2 text-indigo-600 hover:text-indigo-900">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                <button onclick="downloadFile('${fileId}', ${version.version})" class="rounded-md bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Download</button>                    <button onclick="viewFile('${fileId}', ${version.version})" class="ml-2 rounded-md bg-gray-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">View</button>
+                </td>
+            `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('versionHistoryModal').style.display = 'block';
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while fetching version history.');
+        }
+    }
+    async function downloadFile(fileId, version = null) {
+        try {
+            let url = `/download/${fileId}`;
+            if (version !== null) {
+                url += `?version=${encodeURIComponent(version)}`;
+            }
+            const response = await fetch(url);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Server error: ${response.statusText}`);
+            }
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filenameMatch = contentDisposition && contentDisposition.match(/filename="?(.+)"?/i);
+            const filename = filenameMatch ? filenameMatch[1] : 'download';
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(blobUrl);
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Error downloading file:', error);
+            alert(`An error occurred while downloading the file: ${error.message}`);
+        }
+    }
+
+    function closeVersionHistory() {
+        document.getElementById('versionHistoryModal').style.display = 'none';
+    }
+
+
+
+    function closeVersionHistory() {
+        document.getElementById('versionHistoryModal').style.display = 'none';
+    }
+
+
+    let isUploading = false;
+
+    async function handleFileUpload(e) {
+        e.preventDefault();
+        if (isUploading) return;
+
+        const form = e.target;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const formData = new FormData(form);
+
+        try {
+            isUploading = true;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Uploading...';
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || `Server error: ${response.statusText}`);
+            }
+
+            alert('File uploaded successfully!');
+            await updateFileList();
+            const refreshButton = document.createElement('button');
+            refreshButton.textContent = 'Refresh Page';
+            refreshButton.onclick = () => location.reload();
+            document.body.appendChild(refreshButton);
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert(`An error occurred while uploading the file: ${error.message}`);
+        } finally {
+            isUploading = false;
+            submitButton.disabled = false;
+            submitButton.textContent = 'Upload File';
+            form.reset();
+        }
+    }
+    async function updateFileList() {
+        try {
+            const response = await fetch('/file_list');
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.statusText}`);
+            }
+            const files = await response.json();
+
+            const tbody = document.querySelector('table tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            files.forEach(file => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${file.filename}</td>
+                <td class="upload-date" data-utc="${file.latest_version.upload_date}">${new Date(file.latest_version.upload_date).toLocaleString()}</td>
+                <td>${file.current_version}</td>
+                <td class="action-buttons">
+                    <button onclick="downloadFile('${file._id}')">Download</button>
+                    <button onclick="showUpdateForm('${file._id}')">Update</button>
+                    <button onclick="showVersionHistory('${file._id}')">Version History</button>
+                    <button onclick="viewFile('${file._id}')">View</button>
+                    <button onclick="showShareModal('${file._id}')">Share</button>
+                </td>
+            `;
+                tbody.appendChild(row);
+            });
+
+            // Update dates to IST if needed
+            updateDatesToIST();
+        } catch (error) {
+            console.error('Error updating file list:', error);
+            alert('Inorder to update the file list. Please refresh the page.');
+        }
+    }
+    async function fetchFileList() {
+        try {
+            const response = await fetch('/file_list');
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching file list:', error);
+            return [];
+        }
+    }
+
+    let isUpdating = false;
+    function showUpdateForm(fileId) {
+        document.getElementById('fileIdToUpdate').value = fileId;
+        document.getElementById('updateForm').style.display = 'block';
+    }
+    function closeUpdateForm() {
+        document.getElementById('updateForm').style.display = 'none';
+    }
+    async function handleFileUpdate(e) {
+        e.preventDefault();
+        if (isUpdating) return;
+        const form = e.target;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const formData = new FormData(form);
+        const fileId = document.getElementById('fileIdToUpdate').value;
+        try {
+            isUpdating = true;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Updating...';
+            const response = await fetch(`/update/${fileId}`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || `Server error: ${response.statusText}`);
+            }
+            alert('File updated successfully!');
+            await updateFileList();
+            closeUpdateForm();
+            const refreshButton = document.createElement('button');
+            refreshButton.textContent = 'Refresh Page';
+            refreshButton.onclick = () => location.reload();
+            document.body.appendChild(refreshButton);
+        } catch (error) {
+            console.error('Update error:', error);
+            alert(`An error occurred while updating the file: ${error.message}`);
+        } finally {
+            isUpdating = false;
+            submitButton.disabled = false;
+            submitButton.textContent = 'Update File';
+            form.reset();
+        }
+    }
+    function addEventListeners() {
+        const uploadForm = document.getElementById('fileUploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', handleFileUpload);
+        }
+
+        const updateForm = document.getElementById('fileUpdateForm');
+        if (updateForm) {
+            updateForm.addEventListener('submit', handleFileUpdate);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', addEventListeners);
+
+    async function checkFileDetails(fileId) {
+        try {
+            const response = await fetch(`/file_details/${fileId}`);
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.statusText}`);
+            }
+            const data = await response.json();
+            console.log('File details:', data);
+            alert(`Current file version: ${data.current_version}`);
+        } catch (error) {
+            console.error('Error fetching file details:', error);
+            alert('Unable to verify file update status. Please refresh the page to see the latest file status.');
+        }
+    }
+    function copyToClipboard(text, button) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalInnerHTML = button.innerHTML;
+            button.innerHTML = `
+            <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        `;
+            button.classList.remove('text-indigo-600', 'hover:text-indigo-900');
+            button.classList.add('text-green-500');
+
+            setTimeout(() => {
+                button.innerHTML = originalInnerHTML;
+                button.classList.remove('text-green-500');
+                button.classList.add('text-indigo-600', 'hover:text-indigo-900');
+            }, 2000);
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+            const originalInnerHTML = button.innerHTML;
+            button.innerHTML = `
+            <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        `;
+            button.classList.remove('text-indigo-600', 'hover:text-indigo-900');
+            button.classList.add('text-red-500');
+
+            setTimeout(() => {
+                button.innerHTML = originalInnerHTML;
+                button.classList.remove('text-red-500');
+                button.classList.add('text-indigo-600', 'hover:text-indigo-900');
+            }, 2000);
+        });
+    }
+    function convertToIST(utcDateString) {
+        const utcDate = new Date(utcDateString);
+        const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+            timeZone: 'Asia/Kolkata'
+        };
+        return istDate.toLocaleString('en-IN', options);
+    }
+    function updateDatesToIST() {
+        const dateCells = document.querySelectorAll('.upload-date');
+        dateCells.forEach(cell => {
+            const utcDateString = cell.getAttribute('data-utc');
+            cell.textContent = convertToIST(utcDateString);
+        });
+    }
+    document.addEventListener('DOMContentLoaded', updateDatesToIST);
+</script>
+</body>
+
+</html>

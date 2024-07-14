@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared File - {{ file.filename }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .file-info {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .file-info p {
+            margin: 5px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shared File</h1>
+        <div class="file-info">
+            <p><strong>Filename:</strong> {{ file.filename }}</p>
+            <p><strong>Shared by:</strong> {{ file.user }}</p>
+            <p><strong>Last Updated:</strong> {{ file.versions[-1].upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <p><strong>Current Version:</strong> {{ file.current_version }}</p>
+        </div>
+        <a href="{{ url_for('view_file', file_id=file._id) }}" class="button" target="_blank">View File</a>
+        <a href="{{ url_for('download_file', file_id=file._id) }}" class="button">Download File</a>
+    </div>
+
+    <script>
+        async function viewFile(fileId, version = null) {
+            try {
+                let url = `/view/${fileId}`;
+                if (version !== null) {
+                    url += `?version=${version}`;
+                }
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while trying to view the file.');
+            }
+        }
+
+        async function downloadFile(fileId, version = null) {
+            try {
+                let url = `/download/${fileId}`;
+                if (version !== null) {
+                    url += `?version=${version}`;
+                }
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${errorText}`);
+                }
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const filenameMatch = contentDisposition && contentDisposition.match(/filename="?(.+)"?/i);
+                const filename = filenameMatch ? filenameMatch[1] : 'download';
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while downloading the file.');
+            }
+        }
+    </script>
+</body>
+</html>

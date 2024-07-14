@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Existing Records</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">Existing Records</h1>
+        <div class="overflow-x-auto">
+            <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-4 py-2">ID</th>
+                        <th class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Type</th>
+                        <th class="px-4 py-2">Created Date</th>
+                        <th class="px-4 py-2">Modified Date</th>
+                        <th class="px-4 py-2">Author</th>
+                        <th class="px-4 py-2">Keywords</th>
+                        <th class="px-4 py-2">Description</th>
+                        <th class="px-4 py-2">Location</th>
+                        <th class="px-4 py-2">File Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documents %}
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ doc.document_id }}</td>
+                            <td class="px-4 py-2">{{ doc.document_name }}</td>
+                            <td class="px-4 py-2">{{ doc.document_type }}</td>
+                            <td class="px-4 py-2">{{ doc.created_date }}</td>
+                            <td class="px-4 py-2">{{ doc.modified_date }}</td>
+                            <td class="px-4 py-2">{{ doc.author }}</td>
+                            <td class="px-4 py-2">{{ doc.keywords }}</td>
+                            <td class="px-4 py-2">{{ doc.description }}</td>
+                            <td class="px-4 py-2">{{ doc.location }}</td>
+                            <td class="px-4 py-2">{{ doc.file_path }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

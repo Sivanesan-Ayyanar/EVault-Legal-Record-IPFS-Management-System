@@ -1,0 +1,159 @@
+<!doctype html>
+<html class="h-full bg-white dark:bg-gray-900 dark:text-white">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login | E Vault</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fa6p.pages.dev/css/all.min.css" rel="stylesheet">
+        <style>
+          .error {color: red; margin-top: 2px;}
+          body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+          }
+          main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          }
+        </style>
+      </head>
+<body class="h-full">
+        <main class="flex-1 px-6 py-8 lg:px-8">
+        <div class="absolute inset-x-0 top-0 -z-10 flex transform-gpu justify-center overflow-hidden blur-3xl" aria-hidden="true">
+            <div class="aspect-[1108/632] w-[69.25rem] flex-none bg-gradient-to-r from-[#80caff] to-[#4f46e5] opacity-20" style="clip-path: polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)"></div>
+        </div>
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">Sign in to your account</h2>
+            <p class="mt-2 text-center text-sm font-semibold leading-6 text-indigo-600 dark:text-indigo-400">Securely Store Your Legal Documents in Our Blockchain eVault, Safely on IPFS</p>
+        </div>
+        <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
+            <form class="space-y-4" action="{{ url_for('login') }}" method="POST" id="myForm" onsubmit="return validateForm()">
+                <div>
+                    <label for="login" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Email address</label>
+                    <div class="mt-1">
+                        <input id="login" name="login" type="text" oninput="validateLogin()" class="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-white/5 dark:text-white dark:ring-white/10">
+                    </div>
+                    <div id="loginError" class="error"></div>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Password</label>
+                    <div class="mt-1">
+                        <input id="password" name="password" type="password" oninput="validatePassword()" class="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-white/5 dark:text-white dark:ring-white/10">
+                    </div>
+                    <div id="passwordError" class="error"></div>
+                    <div id="BackendError" class="error">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {{ message }}
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+                <div>
+                    <input type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" value="Sign In">
+                </div>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-500">
+                Not a user? <a href="{{url_for('register')}}" class="font-semibold leading-6 text-indigo-600 dark:text-indigo-400">Register to get started!</a>
+            </p>
+        </div>
+    </main>
+    <footer aria-labelledby="footer-heading" class="w-full text-black dark:bg-gray-900 dark:text-white">
+        <h2 id="footer-heading" class="sr-only">Footer</h2>
+        <div class="mx-auto max-w-7xl px-6 py-4 lg:px-8">
+            <div class="border-t dark:border-white/10 pt-4 text-center">
+                <p class="text-xs leading-5 text-gray-400">&copy; 2024 E Vault, Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        var hasClickedSubmit = false;
+        function validateLogin() {
+            // Check if the submit button has been clicked
+            if (!hasClickedSubmit) return;
+
+            var login = document.getElementById("login").value;
+            var loginError = document.getElementById("loginError");
+            var loginInput = document.getElementById("login");
+
+            // Reset error message and remove the error class
+            loginError.innerHTML = "";
+            loginInput.classList.remove("ring-red-300");
+
+            // Validate login
+            if (login.trim() === "") {
+                loginError.innerHTML = "Enter Username or Email ID";
+                loginInput.classList.add("ring-red-300");
+            } else {
+                // Determine if login is an email or username
+                if (login.includes("@")) {
+                    // Validate as email
+                    var emailPattern = /^[a-zA-Z0-9._]+@[a-zA-Z0-9._]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+                    if (!emailPattern.test(login)) {
+                        loginError.innerHTML = "Invalid Email ID";
+                        loginInput.classList.add("ring-red-300");
+                    }
+                } else {
+                    // Validate as username
+                    var usernamePattern = /^[a-zA-Z0-9_]{4,}$/;
+                    if (!usernamePattern.test(login)) {
+                        loginError.innerHTML = "Username must be more than 4 characters and only contain alphanumeric characters";
+                        loginInput.classList.add("ring-red-300");
+                    }
+                }
+            }
+        }
+
+        function validatePassword() {
+            // Check if the submit button has been clicked
+            if (!hasClickedSubmit) return;
+
+            var password = document.getElementById("password").value;
+            var passwordError = document.getElementById("passwordError");
+            var passwordInput = document.getElementById("password");
+
+            // Reset error message and remove the error class
+            passwordError.innerHTML = "";
+            passwordInput.classList.remove("ring-red-300");
+
+            // Validate password
+            var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            if (password.trim() === "") {
+                passwordError.innerHTML = "Enter the Password";
+                passwordInput.classList.add("ring-red-300");
+            } else if (!passwordPattern.test(password)) {
+                passwordError.innerHTML = "Password must have at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.";
+                passwordInput.classList.add("ring-red-300");
+            }
+        }
+
+        function validateForm() {
+            // Set the flag to indicate that submit button has been clicked
+            hasClickedSubmit = true;
+
+            // Trigger individual field validations
+            validateLogin();
+            validatePassword();
+
+            // Check if any validation errors occurred
+            var loginError = document.getElementById("loginError").innerHTML;
+            var passwordError = document.getElementById("passwordError").innerHTML;
+
+            if (loginError || passwordError) {
+                return false; // If there are errors, prevent form submission
+            }
+
+            // If both validations pass, the form is submitted
+            return true;
+        }
+    </script>
+    
+</body>
+</html>

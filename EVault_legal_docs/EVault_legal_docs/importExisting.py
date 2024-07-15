@@ -2,7 +2,7 @@ import csv
 from pymongo import MongoClient
 
 # MongoDB connection
-client = MongoClient('mongodb://evault:7ZypyER24VqmnRzHsaZdGqkvsHUkdMXv@161.97.70.226:27017/evault')
+client = MongoClient('')
 db = client['evault']
 collection = db['legal_documents']
 
